@@ -6,9 +6,11 @@ import CardList from "./Components/CardList/CardList.tsx";
 import Search from "./Components/Search/Search.tsx";
 import {CompanySearch} from "./Types/CompanySearch";
 import {searchCompanies} from "./api.ts";
+import ListPortfolio from "./Components/Portfolio/ListPortfolio/ListPortfolio.tsx";
 
 function App() {
     const [search, setSearch] = useState<string>('');
+    const [portfolioValues, setPortfolioValues] = useState<string[]>([]);
     const [searchResult, setSearchResult] = useState<CompanySearch[]>([]);
     const [serverError, setServerError] = useState<string | null>(null);
 
@@ -27,14 +29,33 @@ function App() {
         console.log(result);
     }
     
-    const onPortfolioCreate = async (e: SyntheticEvent) => {
+    const onPortfolioCreate = (e: SyntheticEvent) => {
         e.preventDefault();
-        console.log(e);
+        const form = e.target as HTMLFormElement;  // this will give us the form element
+        const inputElement = form.elements[0] as HTMLInputElement; // gives us the first element in the form, which is the input
+        // only add new value to the portfolio if it does not exist!
+        const exists = portfolioValues.find((value) => inputElement.value === value);
+        if(!exists) {
+            const updatedPortfolio = [...portfolioValues, inputElement.value];
+            setPortfolioValues(updatedPortfolio);   
+        }
+    }
+    
+    const onPortfolioDelete = (e: SyntheticEvent) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;  // this will give us the form element
+        const inputElement = form.elements[0] as HTMLInputElement; // gives us the first element in the form, which is the input
+        // gives us the portfolioValues with the value removed.
+        const removed = portfolioValues.filter((value) => {
+            return value !== inputElement.value;
+        });
+        setPortfolioValues(removed);
     }
 
   return (
     <div className="App">
         <Search onSearchSubmit={onSearchSubmit} search={search} handleSearchChange={handleSearchChange}/>
+        <ListPortfolio portfolioValues={portfolioValues} onPortfolioDelete={onPortfolioDelete}/>
         <CardList searchResults={searchResult} onPortfolioCreate={onPortfolioCreate}/>
         {serverError && <div>Unable to connect to API</div>}
     </div>
