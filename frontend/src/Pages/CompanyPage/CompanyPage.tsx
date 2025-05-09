@@ -2,13 +2,17 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {CompanyProfile} from "../../Types/CompanyProfile";
 import {getCompanyProfile} from "../../api.ts";
+import SideBar from "../../Components/SideBar/SideBar.tsx";
+import CompanyDashboard from "../../Components/CompanyDashboard/CompanyDashboard.tsx";
+import Tile from "../../Components/Tile/Tile.tsx";
 
-interface Props {};
+interface Props {
+};
 
 const CompanyPage = ({}: Props) => {
     const [company, setCompany] = useState<CompanyProfile>()
     let {ticker} = useParams();
-    
+
     useEffect(() => {
         const getProfileInit = async () => {
             const result = await getCompanyProfile(ticker!);
@@ -16,11 +20,16 @@ const CompanyPage = ({}: Props) => {
         }
         getProfileInit();
     }, []);
-    
+
     return (
         <>
             {company ? (
-                <div>{company.companyName}</div>
+                <div className="w-full relative flex ct-docs-disable-sidebar-content overflow-x-hidden">
+                    <SideBar/>
+                    <CompanyDashboard>
+                        <Tile title="Company Name" subtitle={company.companyName}/>
+                    </CompanyDashboard>
+                </div>
             ) : (
                 <div>Company not found</div>
             )}
