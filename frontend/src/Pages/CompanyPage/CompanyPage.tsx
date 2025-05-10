@@ -26,7 +26,7 @@ const CompanyPage = ({}: Props) => {
             {company ? (
                 <div className="w-full relative flex ct-docs-disable-sidebar-content overflow-x-hidden">
                     <SideBar/>
-                    <CompanyDashboard>
+                    <CompanyDashboard ticker={ticker!}>
                         <Tile title="Company Name" subtitle={company.companyName}/>
                     </CompanyDashboard>
                 </div>

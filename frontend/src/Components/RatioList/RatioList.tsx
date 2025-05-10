@@ -1,25 +1,11 @@
-import {TestDataCompany} from "../Table/testData.tsx";
+import {TableConfig} from "../../Types/TableConfig";
 
-interface Props {}
+interface Props {
+    config: TableConfig[];
+    data: object;
+}
 
-const data = TestDataCompany[0];
-
-type Company = typeof data;
-
-const config = [
-    {
-        label: "Date",
-        render: (company: Company) => company.companyName,
-        subtitle: "This is the company name"
-    },
-    {
-        label: "Date",
-        render: (company: Company) => company.companyName,
-        subtitle: "This is the company name"
-    }
-]
-
-const RatioList = ({}: Props) => {
+const RatioList = ({config, data}: Props) => {
     const renderedRows = config.map((row) => {
         return (
             <li className="py-3 sm:py4">
@@ -41,7 +27,7 @@ const RatioList = ({}: Props) => {
     })
     
     return (
-        <div className="bg-white shadow rounded-lg mb-4 p-4 sm:p-6 h-full">
+        <div className="bg-white shadow rounded-lg ml-4 mt-4 mb-4 p-4 sm:p-6 h-full">
             <ul className="divide-y divide-gray-200">
                 {renderedRows}
             </ul>

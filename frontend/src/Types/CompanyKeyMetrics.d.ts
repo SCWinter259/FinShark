@@ -1,0 +1,46 @@
+// the original key metrics v3 api is a mix of our v2 key metrics and v2 key ratios
+export interface CompanyKeyMetrics {
+    "symbol": string;
+    "marketCap": number;
+    "enterpriseValueTTM": number;
+    "evToSalesTTM": number;
+    "evToOperatingCashFlowTTM": number;
+    "evToFreeCashFlowTTM": number;
+    "evToEBITDATTM": number;
+    "netDebtToEBITDATTM": number;
+    "currentRatioTTM": number;
+    "incomeQualityTTM": number;
+    "grahamNumberTTM": number;
+    "grahamNetNetTTM": number;
+    "taxBurdenTTM": number;
+    "interestBurdenTTM": number;
+    "workingCapitalTTM": number;
+    "investedCapitalTTM": number;
+    "returnOnAssetsTTM": number;
+    "operatingReturnOnAssetsTTM": number;
+    "returnOnTangibleAssetsTTM": number;
+    "returnOnEquityTTM": number;
+    "returnOnInvestedCapitalTTM": number;
+    "returnOnCapitalEmployedTTM": number;
+    "earningsYieldTTM": number;
+    "freeCashFlowYieldTTM": number;
+    "capexToOperatingCashFlowTTM": number;
+    "capexToDepreciationTTM": number;
+    "capexToRevenueTTM": number;
+    "salesGeneralAndAdministrativeToRevenueTTM": number;
+    "researchAndDevelopementToRevenueTTM": number;
+    "stockBasedCompensationToRevenueTTM": number;
+    "intangiblesToTotalAssetsTTM": number;
+    "averageReceivablesTTM": number;
+    "averagePayablesTTM": number;
+    "averageInventoryTTM": number;
+    "daysOfSalesOutstandingTTM": number;
+    "daysOfPayablesOutstandingTTM": number;
+    "daysOfInventoryOutstandingTTM": number;
+    "operatingCycleTTM": number;
+    "cashConversionCycleTTM": number;
+    "freeCashFlowToEquityTTM": number;
+    "freeCashFlowToFirmTTM": number;
+    "tangibleAssetValueTTM": number;
+    "netCurrentAssetValueTTM": number;
+}
