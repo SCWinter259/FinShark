@@ -17,7 +17,7 @@ const Card = ({id, searchResult, onPortfolioCreate}: Props) => {
             key={id}
             id={id}
         >
-            <Link to={`/company/${searchResult.symbol}`} className="font-bold text-center text-veryDarkViolet md:text-left">
+            <Link to={`/company/${searchResult.symbol}/company-profile`} className="font-bold text-center text-veryDarkViolet md:text-left">
                 {searchResult.name} ({searchResult.symbol})
             </Link>
             <p className="text-black">{searchResult.currency}</p>

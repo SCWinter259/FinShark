@@ -11,7 +11,7 @@ interface Props {
 
 const CompanyPage = ({}: Props) => {
     const [company, setCompany] = useState<CompanyProfile>()
-    let {ticker} = useParams();
+    let {ticker} = useParams<string>();
 
     useEffect(() => {
         const getProfileInit = async () => {
@@ -28,6 +28,12 @@ const CompanyPage = ({}: Props) => {
                     <SideBar/>
                     <CompanyDashboard ticker={ticker!}>
                         <Tile title="Company Name" subtitle={company.companyName}/>
+                        <Tile title="Price" subtitle={company.price.toString()}/>
+                        <Tile title="Sector" subtitle={company.sector}/>
+                        <Tile title="Average Volume" subtitle={company.averageVolume.toString()}/>
+                        <p className="bg-white shadow rounded text-medium text-gray-900 p-3 mt-1 m-4">
+                            {company.description}
+                        </p>
                     </CompanyDashboard>
                 </div>
             ) : (

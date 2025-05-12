@@ -6,7 +6,7 @@ interface Props {
 }
 
 const RatioList = ({config, data}: Props) => {
-    const renderedRows = config.map((row) => {
+    const renderedRows = config.map((row: TableConfig) => {
         return (
             <li className="py-3 sm:py4" key={row.label}>
                 <div className="flex items-center space-x-4">

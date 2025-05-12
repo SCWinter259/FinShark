@@ -10,48 +10,39 @@ const configs = [
     {
         label: "Date",
         render: (company: CompanyIncomeStatement) => company.date,
-        subtitle: ""
     },
     {
         label: "Revenue",
         render: (company: CompanyIncomeStatement) => company.revenue,
-        subtitle: ""
     },
     {
         label: "Cost Of Revenue",
         render: (company: CompanyIncomeStatement) => company.costOfRevenue,
-        subtitle: ""
     },
     {
         label: "Depreciation",
         render: (company: CompanyIncomeStatement) =>
             company.depreciationAndAmortization,
-        subtitle: ""
     },
     {
         label: "Operating Income",
         render: (company: CompanyIncomeStatement) => company.operatingIncome,
-        subtitle: ""
     },
     {
         label: "Income Before Taxes",
         render: (company: CompanyIncomeStatement) => company.incomeBeforeTax,
-        subtitle: ""
     },
     {
         label: "Net Income",
         render: (company: CompanyIncomeStatement) => company.netIncome,
-        subtitle: ""
     },
     {
         label: "Earnings Per Share",
         render: (company: CompanyIncomeStatement) => company.eps,
-        subtitle: ""
     },
     {
         label: "Earnings Per Diluted",
         render: (company: CompanyIncomeStatement) => company.epsDiluted,
-        subtitle: ""
     },
 ];
 
