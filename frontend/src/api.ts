@@ -45,7 +45,6 @@ export const getKeyMetrics = async (query: string) => {
         const data = await axios.get<CompanyKeyMetrics[]>(
             `https://financialmodelingprep.com/stable/key-metrics-ttm?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
         );
-        console.log(data);
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
@@ -89,7 +88,6 @@ export const getCashflowStatement = async (query: string) => {
         const data = await axios.get<CompanyCashFlow[]>(
             `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
         );
-        console.log(data);
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);

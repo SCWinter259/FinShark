@@ -25,7 +25,6 @@ const SearchPage = ({}: Props) => {
         } else if(Array.isArray(result.data)) {
             setSearchResult(result.data);
         }
-        console.log(result);
     }
 
     const onPortfolioCreate = (e: SyntheticEvent) => {

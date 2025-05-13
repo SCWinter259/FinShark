@@ -3,36 +3,38 @@ import {useOutletContext} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getKeyMetrics} from "../../api.ts";
 import RatioList from "../RatioList/RatioList.tsx";
+import Spinner from "../Spinner/Spinner.tsx";
+import {formatLargeNonMonetaryNumber, formatRatio} from "../../Helpers/NumberFormatting.ts";
 
 interface Props {};
 
 const tableConfig = [
     {
         label: "Market Cap",
-        render: (company: CompanyKeyMetrics) => company.marketCap,
+        render: (company: CompanyKeyMetrics) => formatLargeNonMonetaryNumber(company.marketCap),
         subtitle: "Total value of all a company's shares of stock",
     },
     {
         label: "Current Ratio",
-        render: (company: CompanyKeyMetrics) => company.currentRatioTTM,
+        render: (company: CompanyKeyMetrics) => formatRatio(company.currentRatioTTM),
         subtitle:
             "Measures the companies ability to pay short term debt obligations",
     },
     {
         label: "Return On Equity",
-        render: (company: CompanyKeyMetrics) => company.returnOnEquityTTM,
+        render: (company: CompanyKeyMetrics) => formatRatio(company.returnOnEquityTTM),
         subtitle:
             "Return on equity is the measure of a company's net income divided by its shareholder's equity",
     },
     {
         label: "Return On Assets",
-        render: (company: CompanyKeyMetrics) => company.returnOnTangibleAssetsTTM,
+        render: (company: CompanyKeyMetrics) => formatRatio(company.returnOnTangibleAssetsTTM),
         subtitle:
             "Return on assets is the measure of how effective a company is using its assets",
     },
     {
         label: "Graham Number",
-        render: (company: CompanyKeyMetrics) => company.grahamNumberTTM,
+        render: (company: CompanyKeyMetrics) => formatRatio(company.grahamNumberTTM),
         subtitle:
             "This is the upperbound of the price range that a defensive investor should pay for a stock",
     },
@@ -55,7 +57,7 @@ export const CompanyProfile = ({}: Props) => {
             { companyData ? (
                 <RatioList config={tableConfig} data={companyData}/>
             ) : (
-                <>Loading...</>
+                <Spinner/>
             )}
         </>
     );

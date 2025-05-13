@@ -5,6 +5,8 @@ import {getCompanyProfile} from "../../api.ts";
 import SideBar from "../../Components/SideBar/SideBar.tsx";
 import CompanyDashboard from "../../Components/CompanyDashboard/CompanyDashboard.tsx";
 import Tile from "../../Components/Tile/Tile.tsx";
+import Spinner from "../../Components/Spinner/Spinner.tsx";
+import {formatLargeNonMonetaryNumber} from "../../Helpers/NumberFormatting.ts";
 
 interface Props {
 };
@@ -28,16 +30,16 @@ const CompanyPage = ({}: Props) => {
                     <SideBar/>
                     <CompanyDashboard ticker={ticker!}>
                         <Tile title="Company Name" subtitle={company.companyName}/>
-                        <Tile title="Price" subtitle={company.price.toString()}/>
+                        <Tile title="Price" subtitle={"$" + company.price.toString()}/>
                         <Tile title="Sector" subtitle={company.sector}/>
-                        <Tile title="Average Volume" subtitle={company.averageVolume.toString()}/>
+                        <Tile title="Average Volume" subtitle={formatLargeNonMonetaryNumber(company.averageVolume)}/>
                         <p className="bg-white shadow rounded text-medium text-gray-900 p-3 mt-1 m-4">
                             {company.description}
                         </p>
                     </CompanyDashboard>
                 </div>
             ) : (
-                <div>Company not found</div>
+                <Spinner/>
             )}
         </>
     );

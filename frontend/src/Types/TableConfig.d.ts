@@ -1,5 +1,5 @@
 export interface TableConfig {
-    label: string | JSX.Element;
+    label: string;
     render: (data: any) => any;
     subtitle?: string;
 }
