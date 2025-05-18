@@ -1,3 +1,4 @@
+using api.Dtos.Comment;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace api.Controllers;
 public class CommentController : ControllerBase
 {
     private readonly ICommentRepository _commentRepo;
+    private readonly IStockRepository _stockRepo;
 
-    public CommentController(ICommentRepository commentRepo)
+    public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
     {
         _commentRepo = commentRepo;
+        _stockRepo = stockRepo;
     }
 
     [HttpGet]
@@ -34,5 +37,35 @@ public class CommentController : ControllerBase
         }
         
         return Ok(comment.ToCommentDto());
+    }
+
+    /*
+     * As one might notice, the is no [FromBody] for commentDto
+     *
+     * Explain:
+     * The default behavior is:
+       
+       If the parameter is a primitive type (int, bool, double, ...), Web API tries to get the value from the URI of the HTTP request.
+       
+       For complex types (your own object, for example: Person), Web API tries to read the value from the body of the HTTP request.
+       
+       So, if you have:
+       
+       a primitive type in the URI, or
+       a complex type in the body
+       ...then you don't have to add any attributes (neither [FromBody] nor [FromUri]).
+     */
+    [HttpPost("{stockId}")]
+    public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentDto commentDto)
+    {
+        if (!await _stockRepo.StockExists(stockId))
+        {
+            return BadRequest("Stock does not exist");
+        }
+
+        var commentModel = commentDto.ToCommentFromCreate(stockId);
+        await _commentRepo.CreateAsync(commentModel);
+        
+        return CreatedAtAction(nameof(GetById), new { id = commentModel }, commentModel.ToCommentDto());
     }
 }
