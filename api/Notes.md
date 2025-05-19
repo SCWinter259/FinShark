@@ -55,3 +55,7 @@ Then make sure you have all the following packages:
 - `Microsoft.EntityFrameworkCore.Design`
 - `Microsoft.EntityFrameworkCore.SqlServer`
 - `Microsoft.EntityFrameworkCore.Tools`
+
+# Test accounts
+
+All test users have password the same as email, or with the first letter of email capitalized.
