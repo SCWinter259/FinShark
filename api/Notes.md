@@ -16,7 +16,14 @@ The added `-C` will help you skip the certificate.
 
 2. Creating the DB
 
-After that, create a database like how they do in the guide. When connecting to database in Rider, the connection string is:
+After that, create a database:
+
+```sql
+CREATE DATABASE <databaseName>;
+GO
+```
+
+When connecting to database in Rider, the connection string is:
 
 ```text
 Server=tcp:localhost,1433;Database=<DB name>;User ID=sa;Password=<password>;Encrypt=optional;TrustServerCertificate=True;
@@ -56,6 +63,22 @@ Then make sure you have all the following packages:
 - `Microsoft.EntityFrameworkCore.SqlServer`
 - `Microsoft.EntityFrameworkCore.Tools`
 
-# Test accounts
+## Test accounts
 
 All test users have password the same as email, or with the first letter of email capitalized.
+
+## Deleting the database
+
+To list the names of all databases:
+
+```sql
+SELECT Name FROM sys.databases;
+GO
+```
+
+Delete the database:
+
+```sql
+DROP DATABASE <databaseName>;
+GO
+```
