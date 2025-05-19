@@ -16,8 +16,8 @@ public class TokenService : ITokenService
     public TokenService(IConfiguration config)
     {
         _config = config;
-        // JWT key generation
-        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+        // JWT key generation (suppress warning because we just know the key is there
+        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]!));
     }
     
     public string CreateToken(AppUser user)
@@ -25,8 +25,9 @@ public class TokenService : ITokenService
         // imagine user applying for a key to access the app
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+            // suppress warnings because we checked the request and required username and email
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            new Claim(JwtRegisteredClaimNames.GivenName, user.UserName!),
         };
 
         // server creates the key

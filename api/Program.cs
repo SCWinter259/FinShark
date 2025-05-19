@@ -16,8 +16,36 @@ var builder = WebApplication.CreateBuilder(args);
 // builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();   // generates swagger doc at [host]/swagger
+
+// generates swagger doc at [host]/swagger
+builder.Services.AddSwaggerGen(option =>
+{
+    // these added options will add JWT to swagger so that we can test our auth
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer",  new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            []
+        }
+    });
+});
 
 // NewtonsoftJson is used to serialize objects to Json
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -61,7 +89,9 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey =
-            new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"]))
+            new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(
+                    builder.Configuration["Jwt:SigningKey"]!)) // suppress warning because we just know the key is there
     };
 });
 
@@ -83,4 +113,4 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.Run();  // important for production (keeps the application host running)
+app.Run(); // important for production (keeps the application host running)
