@@ -67,6 +67,12 @@ Then make sure you have all the following packages:
 
 All test users have password the same as email, or with the first letter of email capitalized.
 
+testUser1 token:
+
+```text
+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RVc2VyMUBleGFtcGxlLmNvbSIsImdpdmVuX25hbWUiOiJ0ZXN0VXNlcjEiLCJuYmYiOjE3NDc3MDU3MjMsImV4cCI6MTc0ODMxMDUyMywiaWF0IjoxNzQ3NzA1NzIzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUxMzciLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUxMzcifQ.PhcG19oe6nAqSzrPMWKkP1GFWuSX9iK3O3fOipv7chFYhc9hc0SytIFIhqVikYv82Hetu7NbaH9nHOs9XBgK2Q
+```
+
 ## Deleting the database
 
 To list the names of all databases:
