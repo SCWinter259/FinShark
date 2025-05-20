@@ -16,4 +16,6 @@ public class Comment
     // we use this model we can call the Stock object
     // and do stuff. Pretty handy.
     public Stock? Stock { get; set; }
+    public string AppUserId { get; set; }
+    public AppUser AppUser { get; set; }
 }

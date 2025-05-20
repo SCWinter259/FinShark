@@ -8,20 +8,20 @@ namespace api.Repository;
 public class CommentRepository : ICommentRepository
 {
     private readonly ApplicationDBContext _context;
-    
+
     public CommentRepository(ApplicationDBContext context)
     {
         _context = context;
     }
-    
+
     public async Task<List<Comment>> GetAllAsync()
     {
-        return await _context.Comments.ToListAsync();
+        return await _context.Comments.Include(a => a.AppUser).ToListAsync();
     }
 
     public async Task<Comment?> GetByIdAsync(int id)
     {
-        return await _context.Comments.FindAsync(id);
+        return await _context.Comments.Include(a => a.AppUser).FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<Comment> CreateAsync(Comment commentModel)
@@ -39,7 +39,7 @@ public class CommentRepository : ICommentRepository
         {
             return null;
         }
-        
+
         existingComment.Title = commentModel.Title;
         existingComment.Content = commentModel.Content;
 

@@ -10,15 +10,18 @@ namespace api.Repository;
 public class StockRepository : IStockRepository
 {
     private readonly ApplicationDBContext _context;
-    
+
     public StockRepository(ApplicationDBContext context)
     {
         _context = context;
     }
-    
+
     public async Task<List<Stock>> GetAllAsync(QueryObject query)
-    {
-        var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
+    {   // all these include to return nested json objects
+        var stocks = _context.Stocks
+            .Include(c => c.Comments)
+            .ThenInclude(a => a.AppUser)
+            .AsQueryable();
 
         // filter the list of stocks for company name
         if (!string.IsNullOrWhiteSpace(query.CompanyName))
@@ -40,7 +43,7 @@ public class StockRepository : IStockRepository
                 stocks = query.IsDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
             }
         }
-        
+
         // the number of stocks we skip
         var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
@@ -94,10 +97,10 @@ public class StockRepository : IStockRepository
         {
             return null;
         }
-        
+
         _context.Stocks.Remove(stockModel);
         await _context.SaveChangesAsync();
-        
+
         // success return for deleting
         return stockModel;
     }

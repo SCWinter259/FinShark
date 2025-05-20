@@ -20,6 +20,9 @@ nupkg/
 # Code Rush
 .cr/
 
+# env
+.env
+
 # User-specific files
 *.suo
 *.user
