@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -56,9 +57,21 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddControllers();
 
 // connect to db (SQL Server)
+// suppress warning because we just know they are there
+var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev)
+//string password = Environment.GetEnvironmentVariable("DB_PASSWORD"); // Get from environment variable (production)
+
+if (string.IsNullOrEmpty(password))
+{
+    throw new Exception("Database password is not configured.");
+}
+
+var fullConnectionString = $"{baseConnectionString};password={password}";
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(fullConnectionString);
 });
 
 // Authentication set up in our db
@@ -113,6 +126,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// enable cors
+app.UseCors(x => x
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+    //.WithOrigins() this is for when you deploy
+    .SetIsOriginAllowed(origin => true)
+);
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

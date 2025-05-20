@@ -88,3 +88,11 @@ Delete the database:
 DROP DATABASE <databaseName>;
 GO
 ```
+
+## Storing User Secrets
+
+.NET does not have anything equivalent to `.env`. Instead, it uses
+***User Secrets*** for development and ***Azure Key Vault*** for deployment.
+
+- [Here](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-9.0&tabs=linux) is the guide for User Secrets
+- 
