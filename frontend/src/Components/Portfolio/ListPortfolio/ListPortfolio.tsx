@@ -1,8 +1,9 @@
 import CardPortfolio from "../CardPortfolio/CardPortfolio.tsx";
 import {SyntheticEvent} from "react";
+import {PortfolioGet} from "../../../Types/PortfolioGet";
 
 interface Props {
-    portfolioValues: string[];
+    portfolioValues: PortfolioGet[];
     onPortfolioDelete: (e: SyntheticEvent) => void;
 };
 

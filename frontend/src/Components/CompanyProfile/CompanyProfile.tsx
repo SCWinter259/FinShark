@@ -5,6 +5,7 @@ import {getKeyMetrics} from "../../api.ts";
 import RatioList from "../RatioList/RatioList.tsx";
 import Spinner from "../Spinner/Spinner.tsx";
 import {formatLargeNonMonetaryNumber, formatRatio} from "../../Helpers/NumberFormatting.ts";
+import StockComment from "../StockComment/StockComment.tsx";
 
 interface Props {};
 
@@ -55,7 +56,10 @@ export const CompanyProfile = ({}: Props) => {
     return (
         <>
             { companyData ? (
-                <RatioList config={tableConfig} data={companyData}/>
+                <>
+                    <RatioList config={tableConfig} data={companyData}/>
+                    <StockComment stockSymbol={ticker}/>
+                </>
             ) : (
                 <Spinner/>
             )}
