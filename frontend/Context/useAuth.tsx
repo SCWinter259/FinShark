@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {UserProfile} from "../src/Types/UserProfile";
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -71,7 +72,10 @@ export const UserProvider = ({children}: Props) => {
                     navigate("/search");
                 }
             })
-            .catch((e) => toast.warning("Server error occured"));
+            .catch((e) => {
+                toast.warning("Server error occured")
+                console.log(e.message);
+            });
     };
 
     const isLoggedIn = () => {
