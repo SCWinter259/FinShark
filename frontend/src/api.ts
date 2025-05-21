@@ -19,7 +19,7 @@ export const searchCompanies = async (query: string) => {
     } catch (error: any) {
         // I have to ignore the following error because I believe it is a Vite linting problem.
         // @ts-ignore
-        if(axios.isAxiosError(error)) {
+        if(isAxiosError(error)) {
             console.log("error message:", error.message);
             return error.message;
         } else {
