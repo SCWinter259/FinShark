@@ -6,8 +6,6 @@ import RatioList from "../RatioList/RatioList.tsx";
 import Spinner from "../Spinner/Spinner.tsx";
 import {formatLargeMonetaryNumber} from "../../Helpers/NumberFormatting.ts";
 
-interface Props {}
-
 const config = [
     {
         label: "Total Assets",
@@ -63,7 +61,7 @@ const config = [
     },
 ];
 
-const BalanceSheet = ({}: Props) => {
+const BalanceSheet = () => {
     const ticker = useOutletContext<string>();
     const [balanceSheet, setBalanceSheet] = useState<CompanyBalanceSheet>();
 

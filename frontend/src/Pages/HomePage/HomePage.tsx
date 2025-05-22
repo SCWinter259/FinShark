@@ -1,8 +1,6 @@
 import Hero from "../../Components/Hero/Hero.tsx";
 
-interface Props {};
-
-export const HomePage = ({}: Props) => {
+export const HomePage = () => {
     return (
         <div>
             <Hero/>

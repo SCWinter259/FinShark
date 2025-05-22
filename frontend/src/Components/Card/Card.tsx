@@ -1,4 +1,3 @@
-import "./Card.css";
 import {CompanySearch} from "../../Types/CompanySearch";
 import AddPortfolio from "../Portfolio/AddPortfolio/AddPortfolio.tsx";
 import {SyntheticEvent} from "react";
@@ -17,13 +16,12 @@ const Card = ({id, searchResult, onPortfolioCreate}: Props) => {
             key={id}
             id={id}
         >
-            <Link to={`/company/${searchResult.symbol}/company-profile`} className="font-bold text-center text-veryDarkViolet md:text-left">
-                {searchResult.name} ({searchResult.symbol})
+            <Link to={`/company/${searchResult.symbol}/company-profile`} className="text-center text-veryDarkViolet md:text-left">
+                <p className="font-bold">{searchResult.symbol} - {searchResult.name}</p>
+                <p className="italic">
+                    {searchResult.exchange} - {searchResult.exchangeFullName} ({searchResult.currency})
+                </p>
             </Link>
-            <p className="text-black">{searchResult.currency}</p>
-            <p className="font-bold text-black">
-                {searchResult.exchange} - {searchResult.exchangeFullName}
-            </p>
             <AddPortfolio onPortfolioCreate={onPortfolioCreate} symbol={id}/>
         </div>
     );

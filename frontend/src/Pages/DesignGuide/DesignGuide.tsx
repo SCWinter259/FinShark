@@ -3,8 +3,6 @@ import RatioList from "../../Components/RatioList/RatioList.tsx";
 import {CompanyKeyMetrics} from "../../Types/CompanyKeyMetrics";
 import {testIncomeStatementData} from "../../Components/Table/testData.tsx";
 
-interface Props {};
-
 const tableConfig = [
     {
         label: "Market Cap",
@@ -37,7 +35,7 @@ const tableConfig = [
     },
 ];
 
-const DesignPage = ({}: Props) => {
+const DesignPage = () => {
     return (
         <>
             <RatioList data={testIncomeStatementData} config={tableConfig}/>

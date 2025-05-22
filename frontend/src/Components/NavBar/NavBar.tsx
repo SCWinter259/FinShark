@@ -2,10 +2,7 @@ import logo from '../../assets/logo.png';
 import {Link} from "react-router-dom";
 import {useAuth} from "../../../Context/useAuth.tsx";
 
-interface Props {
-};
-
-const NavBar = ({}: Props) => {
+const NavBar = () => {
     const {isLoggedIn, user, logout} = useAuth();
     return (
         <nav className="relative container mx-auto p-6">

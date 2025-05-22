@@ -7,8 +7,6 @@ import Spinner from "../Spinner/Spinner.tsx";
 import {formatLargeNonMonetaryNumber, formatRatio} from "../../Helpers/NumberFormatting.ts";
 import StockComment from "../StockComment/StockComment.tsx";
 
-interface Props {};
-
 const tableConfig = [
     {
         label: "Market Cap",
@@ -41,7 +39,7 @@ const tableConfig = [
     },
 ];
 
-export const CompanyProfile = ({}: Props) => {
+export const CompanyProfile = () => {
     const ticker = useOutletContext<string>();
     const [companyData, setCompanyData] = useState<CompanyKeyMetrics>();
 

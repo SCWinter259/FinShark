@@ -6,8 +6,6 @@ import Table from "../Table/Table.tsx";
 import Spinner from "../Spinner/Spinner.tsx";
 import {formatLargeMonetaryNumber} from "../../Helpers/NumberFormatting.ts";
 
-interface Props {}
-
 const config = [
     {
         label: "Date",
@@ -45,7 +43,7 @@ const config = [
     },
 ];
 
-const CashflowStatement = ({}: Props) => {
+const CashflowStatement = () => {
     const ticker = useOutletContext<string>();
     const [cashFlow, setCashFlow] = useState<CompanyCashFlow[]>();
 

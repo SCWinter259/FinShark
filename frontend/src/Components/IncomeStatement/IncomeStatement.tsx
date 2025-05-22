@@ -6,8 +6,6 @@ import Table from "../Table/Table.tsx";
 import Spinner from "../Spinner/Spinner.tsx";
 import {formatLargeMonetaryNumber, formatRatio} from "../../Helpers/NumberFormatting.ts";
 
-interface Props {};
-
 const configs = [
     {
         label: "Date",
@@ -48,7 +46,7 @@ const configs = [
     },
 ];
 
-const IncomeStatement = ({}: Props) => {
+const IncomeStatement = () => {
     const ticker = useOutletContext<string>();
     const [incomeStatement, setIncomeStatement] = useState<CompanyIncomeStatement[]>();
 

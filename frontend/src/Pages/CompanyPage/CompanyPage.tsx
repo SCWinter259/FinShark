@@ -8,10 +8,7 @@ import Tile from "../../Components/Tile/Tile.tsx";
 import Spinner from "../../Components/Spinner/Spinner.tsx";
 import {formatLargeNonMonetaryNumber} from "../../Helpers/NumberFormatting.ts";
 
-interface Props {
-};
-
-const CompanyPage = ({}: Props) => {
+const CompanyPage = () => {
     const [company, setCompany] = useState<CompanyProfile>()
     let {ticker} = useParams<string>();
 

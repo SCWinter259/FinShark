@@ -8,9 +8,7 @@ import {PortfolioGet} from "../../Types/PortfolioGet";
 import {portfolioAddAPI, portfolioDeleteAPI, portfolioGetAPI} from "../../Services/PortfolioService.ts";
 import {toast} from "react-toastify";
 
-interface Props {};
-
-const SearchPage = ({}: Props) => {
+const SearchPage = () => {
     const [search, setSearch] = useState<string>('');
     const [portfolioValues, setPortfolioValues] = useState<PortfolioGet[] | null>([]);
     const [searchResult, setSearchResult] = useState<CompanySearch[]>([]);
