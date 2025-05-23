@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import StockCommentForm from "./StockCommentForm/StockCommentForm";
+import StockCommentForm from "./StockCommentForm.tsx";
 import { commentGetAPI, commentPostAPI } from "../../Services/CommentService";
 import { toast } from "react-toastify";
 import {CommentGet} from "../../Types/CommentGet";
 import Spinner from "../Spinner/Spinner.tsx";
-import StockCommentList from "../StockCommentList/StockCommentList";
+import StockCommentList from "./StockCommentList.tsx";
 
 type Props = {
     stockSymbol: string;

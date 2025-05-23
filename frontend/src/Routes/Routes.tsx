@@ -1,15 +1,16 @@
 import {createBrowserRouter} from "react-router-dom";
 import App from '../App.tsx';
-import HomePage from "../Pages/HomePage/HomePage.tsx";
-import SearchPage from "../Pages/SearchPage/SearchPage.tsx";
-import CompanyPage from "../Pages/CompanyPage/CompanyPage.tsx";
-import CompanyProfile from "../Components/CompanyProfile/CompanyProfile.tsx";
-import IncomeStatement from "../Components/IncomeStatement/IncomeStatement.tsx";
-import BalanceSheet from "../Components/BalanceSheet/BalanceSheet.tsx";
-import CashflowStatement from "../Components/CashflowStatement/CashflowStatement.tsx";
-import LoginPage from "../Pages/LoginPage/LoginPage.tsx";
-import RegisterPage from "../Pages/RegisterPage/RegisterPage.tsx";
+import HomePage from "../Pages/HomePage.tsx";
+import SearchPage from "../Pages/SearchPage.tsx";
+import CompanyPage from "../Pages/CompanyPage.tsx";
+import CompanyProfile from "../Components/CompanyProfile.tsx";
+import IncomeStatement from "../Components/IncomeStatement.tsx";
+import BalanceSheet from "../Components/BalanceSheet.tsx";
+import CashflowStatement from "../Components/CashflowStatement.tsx";
+import LoginPage from "../Pages/LoginPage.tsx";
+import RegisterPage from "../Pages/RegisterPage.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import PortfolioPage from "../Pages/PortfolioPage.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
             {path: "login", element: <ProtectedRoute><LoginPage/></ProtectedRoute>},
             {path: "register", element: <ProtectedRoute><RegisterPage/></ProtectedRoute>},
             {path: "search", element: <ProtectedRoute><SearchPage/></ProtectedRoute>},
+            {path: "portfolio", element: <ProtectedRoute><PortfolioPage/></ProtectedRoute>},
             {path: "company/:ticker", element: <ProtectedRoute><CompanyPage/></ProtectedRoute>,
                 children: [
                     {path: "company-profile", element: <CompanyProfile/>},
