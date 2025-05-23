@@ -37,6 +37,10 @@ export const getCompanyProfile = async (query: string) => {
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        }
+        return "An unexpected error has occurred";
     }
 }
 
@@ -48,6 +52,10 @@ export const getKeyMetrics = async (query: string) => {
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        }
+        return "An unexpected error has occurred";
     }
 }
 
@@ -62,6 +70,10 @@ export const getIncomeStatement = async (query: string) => {
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        }
+        return "An unexpected error has occurred";
     }
 }
 
@@ -76,6 +88,10 @@ export const getBalanceSheet = async (query: string) => {
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        }
+        return "An unexpected error has occurred";
     }
 }
 
@@ -91,5 +107,9 @@ export const getCashflowStatement = async (query: string) => {
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        }
+        return "An unexpected error has occurred";
     }
 }
