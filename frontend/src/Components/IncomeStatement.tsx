@@ -49,18 +49,27 @@ const configs = [
 const IncomeStatement = () => {
     const ticker = useOutletContext<string>();
     const [incomeStatement, setIncomeStatement] = useState<CompanyIncomeStatement[]>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const incomeStatementFetch = async () => {
             const result = await getIncomeStatement(ticker);
-            setIncomeStatement(result!.data);
+            if(typeof result === 'string') {
+                setError(result);
+            } else {
+                setIncomeStatement(result.data);
+            }
         }
         incomeStatementFetch();
     }, []);
     
     return (
         <>
-            {incomeStatement ? <Table config={configs} data={incomeStatement}/> : <Spinner/>}
+            {incomeStatement ? (
+                <Table config={configs} data={incomeStatement}/>
+            ) : (
+                error ? <div className="m-auto font-semibold">{error}</div> : <Spinner/>
+            )}
         </>
     );
 };

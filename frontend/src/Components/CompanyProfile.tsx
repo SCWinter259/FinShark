@@ -42,11 +42,16 @@ const tableConfig = [
 export const CompanyProfile = () => {
     const ticker = useOutletContext<string>();
     const [companyData, setCompanyData] = useState<CompanyKeyMetrics>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const getCompanyKeyMetrics = async () => {
-            const value = await getKeyMetrics(ticker);
-            setCompanyData(value?.data[0]);
+            const result = await getKeyMetrics(ticker);
+            if(typeof result === 'string') {
+                setError(result);
+            } else {
+                setCompanyData(result.data[0]);
+            }
         }
         getCompanyKeyMetrics();
     }, []);
@@ -59,7 +64,7 @@ export const CompanyProfile = () => {
                     <StockComment stockSymbol={ticker}/>
                 </>
             ) : (
-                <Spinner/>
+                error ? <div className="m-auto font-semibold">{error}</div> : <Spinner/>
             )}
         </>
     );

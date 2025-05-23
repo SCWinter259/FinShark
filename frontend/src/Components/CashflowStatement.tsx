@@ -46,11 +46,16 @@ const config = [
 const CashflowStatement = () => {
     const ticker = useOutletContext<string>();
     const [cashFlow, setCashFlow] = useState<CompanyCashFlow[]>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCashflow = async () => {
             const result = await getCashflowStatement(ticker);
-            setCashFlow(result!.data);
+            if(typeof result === 'string') {
+                setError(result);
+            } else {
+                setCashFlow(result.data);
+            }
         }
         fetchCashflow();
     }, []);
@@ -60,7 +65,7 @@ const CashflowStatement = () => {
             { cashFlow ? (
                 <Table config={config} data={cashFlow}/>
             ) : (
-                <Spinner/>
+                error ? <div className="m-auto font-semibold">{error}</div> : <Spinner/>
             )}
         </>
     );

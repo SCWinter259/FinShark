@@ -9,13 +9,18 @@ import Spinner from "../Components/Spinner/Spinner.tsx";
 import {formatLargeNonMonetaryNumber} from "../Helpers/NumberFormatting.ts";
 
 const CompanyPage = () => {
-    const [company, setCompany] = useState<CompanyProfile>()
+    const [company, setCompany] = useState<CompanyProfile>();
+    const [error, setError] = useState<string | null>(null);
     let {ticker} = useParams<string>();
 
     useEffect(() => {
         const getProfileInit = async () => {
             const result = await getCompanyProfile(ticker!);
-            setCompany(result?.data[0]);
+            if(typeof result === 'string') {
+                setError(result);
+            } else {
+                setCompany(result.data[0]);
+            }
         }
         getProfileInit();
     }, []);
@@ -36,7 +41,7 @@ const CompanyPage = () => {
                     </CompanyDashboard>
                 </div>
             ) : (
-                <Spinner/>
+                error ? <div className="m-auto font-semibold">{error}</div> : <Spinner/>
             )}
         </>
     );

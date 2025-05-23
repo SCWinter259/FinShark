@@ -64,11 +64,16 @@ const config = [
 const BalanceSheet = () => {
     const ticker = useOutletContext<string>();
     const [balanceSheet, setBalanceSheet] = useState<CompanyBalanceSheet>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const getData = async () => {
-            const value = await getBalanceSheet(ticker);
-            setBalanceSheet(value?.data[0]);
+            const result = await getBalanceSheet(ticker);
+            if(typeof result === 'string') {
+                setError(result);
+            } else {
+                setBalanceSheet(result.data[0]);
+            }
         }
         getData();
     }, []);
@@ -78,7 +83,7 @@ const BalanceSheet = () => {
             {balanceSheet ? (
                 <RatioList config={config} data={balanceSheet}/>
             ) : (
-                <Spinner/>
+                error ? <div className="m-auto font-semibold">{error}</div> : <Spinner/>
             )}
         </>
     );
