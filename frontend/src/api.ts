@@ -5,55 +5,59 @@ import {CompanyKeyMetrics} from "./Types/CompanyKeyMetrics";
 import {CompanyIncomeStatement} from "./Types/CompanyIncomeStatement";
 import {CompanyBalanceSheet} from "./Types/CompanyBalanceSheet";
 import {CompanyCashFlow} from "./Types/CompanyCashFlow";
+import {StockChartData} from "./Types/StockChartData";
+import {getToday} from "./Helpers/GetDates.ts";
 
 interface SearchResponse {
     data: CompanySearch[];
 }
 
-export const searchCompanies = async (query: string) => {
+export const searchCompanies = async (symbol: string) => {
     try {
         const data = await axios.get<SearchResponse>(
-            `https://financialmodelingprep.com/stable/search-symbol?query=${query}&apikey=${import.meta.env.VITE_API_KEY}`
-        );
-        return data;
-    } catch (error: any) {
-        // I have to ignore the following error because I believe it is a Vite linting problem.
-        // @ts-ignore
-        if(isAxiosError(error)) {
-            console.log("error message:", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error");
-            return "An unexpected error has occurred";
-        }
-    }
-}
-
-export const getCompanyProfile = async (query: string) => {
-    try {
-        const data = await axios.get<CompanyProfile[]>(
-            `https://financialmodelingprep.com/stable/profile?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
+            `https://financialmodelingprep.com/stable/search-symbol?query=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
 }
 
-export const getKeyMetrics = async (query: string) => {
+export const getCompanyProfile = async (symbol: string) => {
     try {
-        const data = await axios.get<CompanyKeyMetrics[]>(
-            `https://financialmodelingprep.com/stable/key-metrics-ttm?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
+        const data = await axios.get<CompanyProfile[]>(
+            `https://financialmodelingprep.com/stable/profile?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
+        }
+        return "An unexpected error has occurred";
+    }
+}
+
+export const getKeyMetrics = async (symbol: string) => {
+    try {
+        const data = await axios.get<CompanyKeyMetrics[]>(
+            `https://financialmodelingprep.com/stable/key-metrics-ttm?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
+        );
+        return data;
+    } catch (error: any) {
+        console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -62,16 +66,18 @@ export const getKeyMetrics = async (query: string) => {
 /*
 * Gets the 5 most recent income statements from the company
 */
-export const getIncomeStatement = async (query: string) => {
+export const getIncomeStatement = async (symbol: string) => {
     try {
         const data = await axios.get<CompanyIncomeStatement[]>(
-            `https://financialmodelingprep.com/stable/income-statement?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
+            `https://financialmodelingprep.com/stable/income-statement?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -80,16 +86,18 @@ export const getIncomeStatement = async (query: string) => {
 /*
 * Gets the 5 most recent balance sheets from the company
 */
-export const getBalanceSheet = async (query: string) => {
+export const getBalanceSheet = async (symbol: string) => {
     try {
         const data = await axios.get<CompanyBalanceSheet[]>(
-            `https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
+            `https://financialmodelingprep.com/stable/balance-sheet-statement?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -99,16 +107,36 @@ export const getBalanceSheet = async (query: string) => {
 /*
 * Gets the 5 most recent cashflow statements from the company
 */
-export const getCashflowStatement = async (query: string) => {
+export const getCashflowStatement = async (symbol: string) => {
     try {
         const data = await axios.get<CompanyCashFlow[]>(
-            `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${query}&apikey=${import.meta.env.VITE_API_KEY}`
+            `https://financialmodelingprep.com/stable/cash-flow-statement?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
+        }
+        return "An unexpected error has occurred";
+    }
+}
+
+export const getStockChartData = async (symbol: string, from: string) => {
+    try {
+        console.log(from);
+        const data = await axios.get<StockChartData[]>(
+            `https://financialmodelingprep.com/stable/historical-price-eod/light?symbol=${symbol}&from=${from}&to=${getToday()}&apikey=${import.meta.env.VITE_API_KEY}`
+        );
+        return data;
+    } catch (error: any) {
+        console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
