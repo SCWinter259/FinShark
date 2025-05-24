@@ -6,6 +6,7 @@ import {CompanyIncomeStatement} from "./Types/CompanyIncomeStatement";
 import {CompanyBalanceSheet} from "./Types/CompanyBalanceSheet";
 import {CompanyCashFlow} from "./Types/CompanyCashFlow";
 import {StockChartData} from "./Types/StockChartData";
+import {getToday} from "./Helpers/GetDates.ts";
 
 interface SearchResponse {
     data: CompanySearch[];
@@ -18,15 +19,13 @@ export const searchCompanies = async (symbol: string) => {
         );
         return data;
     } catch (error: any) {
-        // I have to ignore the following error because I believe it is a Vite linting problem.
-        // @ts-ignore
-        if(isAxiosError(error)) {
-            console.log("error message:", error.message);
-            return error.message;
-        } else {
-            console.log("unexpected error");
-            return "An unexpected error has occurred";
+        console.log("error message:", error.message);
+        if(error.status === 402) {
+            return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
+        return "An unexpected error has occurred";
     }
 }
 
@@ -40,6 +39,8 @@ export const getCompanyProfile = async (symbol: string) => {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -55,6 +56,8 @@ export const getKeyMetrics = async (symbol: string) => {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -73,6 +76,8 @@ export const getIncomeStatement = async (symbol: string) => {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -91,6 +96,8 @@ export const getBalanceSheet = async (symbol: string) => {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
@@ -110,21 +117,26 @@ export const getCashflowStatement = async (symbol: string) => {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }
 }
 
-export const getStockChartData = async (symbol: string) => {
+export const getStockChartData = async (symbol: string, from: string) => {
     try {
+        console.log(from);
         const data = await axios.get<StockChartData[]>(
-            `https://financialmodelingprep.com/stable/historical-price-eod/light?symbol=${symbol}&apikey=${import.meta.env.VITE_API_KEY}`
+            `https://financialmodelingprep.com/stable/historical-price-eod/light?symbol=${symbol}&from=${from}&to=${getToday()}&apikey=${import.meta.env.VITE_API_KEY}`
         );
         return data;
     } catch (error: any) {
         console.log("error message:", error.message);
         if(error.status === 402) {
             return "Oops, your API subscription is too cheap for this information";
+        } else if (error.status === 429) {
+            return "You have hit the API call limit!"
         }
         return "An unexpected error has occurred";
     }

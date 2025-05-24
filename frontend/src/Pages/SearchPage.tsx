@@ -3,8 +3,6 @@ import CardList from "../Components/CardList.tsx";
 import {ChangeEvent, SyntheticEvent, useState} from "react";
 import {CompanySearch} from "../Types/CompanySearch";
 import {searchCompanies} from "../api.ts";
-import {portfolioAddAPI} from "../Services/PortfolioService.ts";
-import {toast} from "react-toastify";
 
 const SearchPage = () => {
     const [search, setSearch] = useState<string>('');
@@ -24,22 +22,6 @@ const SearchPage = () => {
             setSearchResult(result.data);
         }
     }
-
-    const onPortfolioCreate = async (e: SyntheticEvent) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;  // this will give us the form element
-        const inputElement = form.elements[0] as HTMLInputElement; // gives us the first element in the form, which is the input
-        
-        try {
-            const res = await portfolioAddAPI(inputElement.value);
-            if(res?.status === 201) {
-                toast.success("Stock added to portfolio!")
-            }
-        } catch (error: any) {
-            toast.error("Could not get portfolio items!");
-            console.log(error.message);
-        }
-    }
     
     return (
         <>
@@ -50,9 +32,8 @@ const SearchPage = () => {
             />
             <CardList
                 searchResults={searchResult}
-                onPortfolioCreate={onPortfolioCreate}
             />
-            {serverError && <div>Unable to connect to API</div>}
+            {serverError && <div className="m-auto font-semibold">{serverError}</div>}
         </>
     );
 };
