@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {FaHome} from "react-icons/fa";
+import {FaBalanceScale, FaBuilding, FaChartLine, FaMoneyBillWave} from "react-icons/fa";
 
 const SideBar = () => {
     return (
@@ -11,19 +11,19 @@ const SideBar = () => {
                 <div className="flex bg-white flex-col items-stretch opacity-100 relative mt-4 overflow-y-auto overflow-x-hidden h-auto z-40 items-center flex-1 rounded w-full">
                     <div className="md:flex-col md:min-w-full flex flex-col list-none">
                         <Link to="company-profile" className="flex md:min-w-full text-blueGray-500 text-medium uppercase font-bold block pt--1 pb-4 no-underline">
-                            <FaHome/>
+                            <FaBuilding/>
                             <h6 className="ml-3">Company Profile</h6>
                         </Link>
                         <Link to="income-statement" className="flex md:min-w-full text-blueGray-500 text-medium uppercase font-bold block pt--1 pb-4 no-underline">
-                            <FaHome/>
+                            <FaChartLine/>
                             <h6 className="ml-3">Income Statement</h6>
                         </Link>
                         <Link to="balance-sheet" className="flex md:min-w-full text-blueGray-500 text-medium uppercase font-bold block pt--1 pb-4 no-underline">
-                            <FaHome/>
+                            <FaBalanceScale/>
                             <h6 className="ml-3">Balance Sheet</h6>
                         </Link>
                         <Link to="cashflow-statement" className="flex md:min-w-full text-blueGray-500 text-medium uppercase font-bold block pt--1 pb-4 no-underline">
-                            <FaHome/>
+                            <FaMoneyBillWave/>
                             <h6 className="ml-3">Cashflow Statement</h6>
                         </Link>
                     </div>
