@@ -1,7 +1,6 @@
 import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {StockChartData} from "../Types/StockChartData";
 import {getStockChartData} from "../api.ts";
-import Spinner from "./Spinner/Spinner.tsx";
 import {getStartDate} from "../Helpers/GetDates.ts";
 import {createChart, ColorType, AreaSeries} from "lightweight-charts";
 
@@ -35,12 +34,12 @@ const Chart = ({ticker}: Props) => {
     const [selectedChartOption, setSelectedChartOption] = useState<string>(chartOptions[0]);
 
     const chartContainerRef = useRef<any>(null);
-    
+
     useEffect(() => {
         // call API for chart data
         getChartData();
     }, [selectedChartOption]);
-    
+
     useEffect(() => {
         // create the chart object
         const chart = createChart(chartContainerRef.current, {
@@ -56,7 +55,7 @@ const Chart = ({ticker}: Props) => {
         const handleResize = () => {
             chart.applyOptions({ width: chartContainerRef.current.clientWidth });
         };
-        
+
         // get the data series in the right format and sort in ascending time order
         const sortedDataSeries = stockData.map((data: StockChartData) => (
             {time: data.date, value: data.price}
@@ -64,14 +63,14 @@ const Chart = ({ticker}: Props) => {
 
         // find if the chart does up or down (default to true)
         const isUp = stockData.length > 0 ? (sortedDataSeries[0].value <= sortedDataSeries[sortedDataSeries.length - 1].value) : true;
-        
+
         // fill in the data
-        const newSeries = chart.addSeries(AreaSeries, { 
-            lineColor: isUp ? chartStyle.lineGreenColor : chartStyle.lineRedColor, 
-            topColor: isUp ? chartStyle.areaGreenTopColor : chartStyle.areaRedTopColor, 
+        const newSeries = chart.addSeries(AreaSeries, {
+            lineColor: isUp ? chartStyle.lineGreenColor : chartStyle.lineRedColor,
+            topColor: isUp ? chartStyle.areaGreenTopColor : chartStyle.areaRedTopColor,
             bottomColor: isUp ? chartStyle.areaGreenBottomColor : chartStyle.areaRedBottomColor
         });
-        
+
         newSeries.setData(sortedDataSeries);   // sort the data in ascending order
 
         window.addEventListener('resize', handleResize);
@@ -85,22 +84,22 @@ const Chart = ({ticker}: Props) => {
 
     const getChartData = async () => {
         const result = await getStockChartData(ticker, getStartDate(selectedChartOption));
-        console.log(result);
         if(typeof result === 'string') {
             setError(result);
         } else {
             setStockData(result.data);
         }
     }
-    
+
     const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
         setSelectedChartOption(event.target.value);
     }
-    
+
     return (
         <div className="relative pt-20 bg-blueGray-100 w-full flex justify-center">
             <div className="relative flex flex-col w-full items-center p-8">
                 <div className="w-full m-8" ref={chartContainerRef}/>
+                {error && <div className="m-auto font-semibold">{error}</div>}
                 <select
                     value={selectedChartOption}
                     onChange={handleSelectChange}

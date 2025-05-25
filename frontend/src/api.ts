@@ -126,7 +126,6 @@ export const getCashflowStatement = async (symbol: string) => {
 
 export const getStockChartData = async (symbol: string, from: string) => {
     try {
-        console.log(from);
         const data = await axios.get<StockChartData[]>(
             `https://financialmodelingprep.com/stable/historical-price-eod/light?symbol=${symbol}&from=${from}&to=${getToday()}&apikey=${import.meta.env.VITE_API_KEY}`
         );
