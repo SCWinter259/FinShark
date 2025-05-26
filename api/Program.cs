@@ -67,7 +67,7 @@ if (string.IsNullOrEmpty(password))
 {
     throw new Exception("Database password is not configured.");
 }
-var fullConnectionString = $"{baseConnectionString};password={password}";
+var fullConnectionString = $"{baseConnectionString};Password={password}";
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
