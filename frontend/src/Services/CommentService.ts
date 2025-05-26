@@ -3,7 +3,7 @@ import {CommentGet} from "../Types/CommentGet";
 import {CommentPost} from "../Types/CommentPost";
 import { handleError } from "../../Helpers/ErrorHandler.ts";
 
-const api = "http://localhost:5137/api/comment/";
+const api = "https://finshark-gfhvfzgpd6gvgngf.canadacentral-01.azurewebsites.net/api/comment/";
 
 export const commentPostAPI = async (
     title: string,
