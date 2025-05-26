@@ -26,9 +26,9 @@ builder.Configuration.AddAzureKeyVault(
 // for testing if azure took the key from key vault corretly
 var testSecret = builder.Configuration["Jwt:SigningKey"];
 if (string.IsNullOrEmpty(testSecret))
-    Console.WriteLine("❌ Jwt:SigningKey is missing or null");
+    System.Diagnostics.Trace.WriteLine("❌ Jwt:SigningKey is missing or null");
 else
-    Console.WriteLine("✅ Jwt:SigningKey loaded from Key Vault");
+    System.Diagnostics.Trace.WriteLine("✅ Jwt:SigningKey loaded from Key Vault");
 
 // 2. Add Services
 // NewtonsoftJson is used to serialize objects to Json
@@ -156,7 +156,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"DB Migration failed: {ex.Message}");
+    System.Diagnostics.Trace.WriteLine($"DB Migration failed: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.
