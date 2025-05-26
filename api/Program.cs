@@ -9,8 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Azure.Identity;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// add logging for azure
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // 1. Add configuration (Key Vault)
 builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
@@ -143,8 +148,9 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // for auto migrate on Azure
-try {
-	using var scope = app.Services.CreateScope();
+try
+{
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
     db.Database.Migrate();
 }
@@ -159,6 +165,18 @@ if (app.Environment.IsDevelopment())
     // app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    // define a fallback for error route
+    app.Map("/error", (HttpContext http) =>
+    {
+        var feature = http.Features.Get<IExceptionHandlerFeature>();
+        var ex = feature?.Error;
+        return Results.Problem(title: ex?.Message, detail: ex?.StackTrace);
+    });
+    app.UseExceptionHandler("/error"); // You need to implement /error
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
