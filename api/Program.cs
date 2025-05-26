@@ -8,9 +8,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
+// for using secrets from key vault
+builder.Configuration.AddAzureKeyVault(
+    new Uri("https://finsharkkeyvault.vault.azure.net/"),
+    new DefaultAzureCredential());
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -58,7 +63,8 @@ builder.Services.AddControllers();
 
 // connect to db (SQL Server)
 // suppress warning because we just know they are there
-var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+// var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB")!;
 var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev)
 //string password = Environment.GetEnvironmentVariable("DB_PASSWORD"); // Get from environment variable (production)
 
