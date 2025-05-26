@@ -3,7 +3,7 @@ import {PortfolioGet} from "../Types/PortfolioGet";
 import {PortfolioPost} from "../Types/PortfolioPost";
 import {handleError} from "../../Helpers/ErrorHandler.ts";
 
-const api = "http://localhost:5137/api/portfolio/";
+const api = "https://finshark-gfhvfzgpd6gvgngf.canadacentral-01.azurewebsites.net/api/portfolio/";
 
 export const portfolioAddAPI = async (symbol: string) => {
     try {
