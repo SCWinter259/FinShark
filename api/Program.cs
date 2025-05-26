@@ -75,6 +75,13 @@ if (string.IsNullOrEmpty(password))
 
 var fullConnectionString = $"{baseConnectionString};password={password}";
 
+// for auto migrate on Azure
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(fullConnectionString);
