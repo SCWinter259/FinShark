@@ -15,7 +15,7 @@ builder.Configuration.AddUserSecrets<Program>();    // for local development use
 // for using secrets from key vault
 builder.Configuration.AddAzureKeyVault(
     new Uri("https://finsharkkeyvault.vault.azure.net/"),
-    new DefaultAzureCredential());
+    new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
