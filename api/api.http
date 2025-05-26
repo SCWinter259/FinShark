@@ -1,6 +1,4 @@
-#@api_HostAddress = http://localhost:5137
-
-@api_HostAddress = https://finshark-gfhvfzgpd6gvgngf.canadacentral-01.azurewebsites.net/
+@api_HostAddress = http://localhost:5137
 
 GET {{api_HostAddress}}/weatherforecast/
 Accept: application/json
