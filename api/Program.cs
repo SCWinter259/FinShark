@@ -138,7 +138,7 @@ app.UseCors(x => x
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
-    //.WithOrigins() this is for when you deploy
+    .WithOrigins() //this is for when you deploy
     .SetIsOriginAllowed(origin => true)
 );
 
