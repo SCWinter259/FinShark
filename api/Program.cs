@@ -18,6 +18,12 @@ builder.Configuration.AddUserSecrets<Program>();    // for local development use
 builder.Configuration.AddAzureKeyVault(
     new Uri("https://finsharkkeyvault.vault.azure.net/"),
     new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
+// for testing if azure took the key from key vault corretly
+var testSecret = builder.Configuration["Jwt:SigningKey"];
+if (string.IsNullOrEmpty(testSecret))
+    Console.WriteLine("❌ Jwt:SigningKey is missing or null");
+else
+    Console.WriteLine("✅ Jwt:SigningKey loaded from Key Vault");
 
 // 2. Add Services
 // NewtonsoftJson is used to serialize objects to Json
@@ -137,10 +143,14 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // for auto migrate on Azure
-using (var scope = app.Services.CreateScope())
-{
+try {
+	using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
     db.Database.Migrate();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"DB Migration failed: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.
