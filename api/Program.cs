@@ -134,13 +134,29 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // enable cors
-app.UseCors(x => x
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials()
-    .WithOrigins("http://localhost:5173", "https://fin-shark.vercel.app") //this is for when you deploy
-    .SetIsOriginAllowed(origin => true)
-);
+//app.UseCors(x => x
+//        .AllowAnyMethod()
+//        .AllowAnyHeader()
+//        .AllowCredentials()
+//    .WithOrigins("http://localhost:5173", "https://fin-shark.vercel.app") //this is for when you deploy
+//    .SetIsOriginAllowed(origin => true)
+//);
+var allowedOrigins = new[] {
+    "https://fin-shark.vercel.app", // Your deployed frontend
+    "http://localhost:5173"         // Optional: for local development
+};
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // only if using cookies/auth
+    });
+});
+app.UseCors(); // Use default policy
 
 app.UseAuthentication();
 app.UseAuthorization();
