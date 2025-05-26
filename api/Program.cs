@@ -75,17 +75,19 @@ if (string.IsNullOrEmpty(password))
 
 var fullConnectionString = $"{baseConnectionString};password={password}";
 
-// for auto migrate on Azure
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
-}
-
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(fullConnectionString);
 });
+
+var app = builder.Build();
+
+// for auto migrate on Azure
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+    db.Database.Migrate();
+}
 
 // Authentication set up in our db
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -127,8 +129,6 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IFMPService, FMPService>();
 builder.Services.AddHttpClient<IFMPService, FMPService>();
-
-var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
