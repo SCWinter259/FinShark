@@ -11,18 +11,23 @@ using Microsoft.OpenApi.Models;
 using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 1. Add configuration (Key Vault)
 builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
 // for using secrets from key vault
 builder.Configuration.AddAzureKeyVault(
     new Uri("https://finsharkkeyvault.vault.azure.net/"),
     new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+// 2. Add Services
+// NewtonsoftJson is used to serialize objects to Json
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 // generates swagger doc at [host]/swagger
 builder.Services.AddSwaggerGen(option =>
 {
@@ -53,26 +58,15 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-// NewtonsoftJson is used to serialize objects to Json
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-});
-
-builder.Services.AddControllers();
-
-// connect to db (SQL Server)
+// 3. DB Connection
 // suppress warning because we just know they are there
 // var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB")!;
-var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev)
-//string password = Environment.GetEnvironmentVariable("DB_PASSWORD"); // Get from environment variable (production)
-
+var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
 if (string.IsNullOrEmpty(password))
 {
     throw new Exception("Database password is not configured.");
 }
-
 var fullConnectionString = $"{baseConnectionString};password={password}";
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
@@ -80,15 +74,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(fullConnectionString);
 });
 
-var app = builder.Build();
-
-// for auto migrate on Azure
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-    db.Database.Migrate();
-}
-
+// 4. Register Identity and JWT Auth
 // Authentication set up in our db
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -130,24 +116,7 @@ builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IFMPService, FMPService>();
 builder.Services.AddHttpClient<IFMPService, FMPService>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    // app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-// enable cors
-//app.UseCors(x => x
-//        .AllowAnyMethod()
-//        .AllowAnyHeader()
-//        .AllowCredentials()
-//    .WithOrigins("http://localhost:5173", "https://fin-shark.vercel.app") //this is for when you deploy
-//    .SetIsOriginAllowed(origin => true)
-//);
+// 5. CORS Setup
 var allowedOrigins = new[] {
     "https://fin-shark.vercel.app", // Your deployed frontend
     "http://localhost:5173"         // Optional: for local development
@@ -163,6 +132,26 @@ builder.Services.AddCors(options =>
               .AllowCredentials(); // only if using cookies/auth
     });
 });
+
+// 6. Build the app
+var app = builder.Build();
+
+// for auto migrate on Azure
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+    db.Database.Migrate();
+}
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    // app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
 app.UseCors(); // Use default policy
 
 app.UseAuthentication();
