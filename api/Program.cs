@@ -138,7 +138,7 @@ app.UseCors(x => x
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
-    .WithOrigins() //this is for when you deploy
+    .WithOrigins("http://localhost:5173", "https://fin-shark.vercel.app") //this is for when you deploy
     .SetIsOriginAllowed(origin => true)
 );
 
