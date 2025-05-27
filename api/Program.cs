@@ -46,14 +46,14 @@ builder.Configuration.AddAzureKeyVault(
     new Uri("https://finsharkkeyvault.vault.azure.net/"),
     new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
 // for testing if azure took the key from key vault corretly
-var testSecret = builder.Configuration["Jwt:SigningKey"];
+var testSecret = builder.Configuration["JWT:SigningKey"];
 if (string.IsNullOrEmpty(testSecret))
 {
-    logger.LogInformation("Jwt:SigningKey is missing or null");
+    logger.LogInformation("JWT:SigningKey is missing or null");
 }
 else
 {
-    logger.LogInformation("Jwt:SigningKey loaded from Key Vault");
+    logger.LogInformation("JWT:SigningKey loaded from Key Vault");
 }
 
 // 2. Add Services
@@ -135,14 +135,14 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"], // configured in appsettings.json
+        ValidIssuer = builder.Configuration["JWT:Issuer"], // configured in appsettings.json
         ValidateAudience = true,
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey =
             new SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(
-                    builder.Configuration["Jwt:SigningKey"]!)) // suppress warning because we just know the key is there
+                    builder.Configuration["JWT:SigningKey"]!)) // suppress warning because we just know the key is there
     };
 });
 
