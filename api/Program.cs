@@ -10,12 +10,34 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Azure.Identity;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // add logging for azure
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+builder.Logging.AddAzureWebAppDiagnostics();
+
+builder.Services.Configure<AzureFileLoggerOptions>(options =>
+{
+    options.FileName = "azure-diagnostic-";
+    options.FileSizeLimit = 50 * 1024; // 50KB
+    options.RetainedFileCountLimit = 5;
+});
+
+builder.Services.Configure<AzureBlobLoggerOptions>(options =>
+{
+    options.BlobName = "log.txt";
+});
+
+builder.Logging
+    .AddFilter("Microsoft", LogLevel.Warning)
+    .AddFilter("System", LogLevel.Warning);
+
+var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILoggerFactory>()
+    .CreateLogger("Program");
 
 // 1. Add configuration (Key Vault)
 builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
@@ -26,9 +48,13 @@ builder.Configuration.AddAzureKeyVault(
 // for testing if azure took the key from key vault corretly
 var testSecret = builder.Configuration["Jwt:SigningKey"];
 if (string.IsNullOrEmpty(testSecret))
-    System.Diagnostics.Trace.WriteLine("❌ Jwt:SigningKey is missing or null");
+{
+    logger.LogInformation("Jwt:SigningKey is missing or null");
+}
 else
-    System.Diagnostics.Trace.WriteLine("✅ Jwt:SigningKey loaded from Key Vault");
+{
+    logger.LogInformation("Jwt:SigningKey loaded from Key Vault");
+}
 
 // 2. Add Services
 // NewtonsoftJson is used to serialize objects to Json
@@ -145,8 +171,6 @@ builder.Services.AddCors(options =>
 });
 
 // 6. Build the app
-var app = builder.Build();
-
 // for auto migrate on Azure
 try
 {
@@ -156,7 +180,7 @@ try
 }
 catch (Exception ex)
 {
-    System.Diagnostics.Trace.WriteLine($"DB Migration failed: {ex.Message}");
+    logger.LogInformation($"DB Migration failed: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.
