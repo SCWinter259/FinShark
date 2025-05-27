@@ -206,18 +206,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    // define a fallback for error route
-    app.Map("/error", (HttpContext http) =>
-    {
-        var feature = http.Features.Get<IExceptionHandlerFeature>();
-        var ex = feature?.Error;
-        return Results.Problem(title: ex?.Message, detail: ex?.StackTrace);
-    });
-    app.UseExceptionHandler("/error"); // You need to implement /error
-    app.UseHsts();
-}
 
 app.UseHttpsRedirection();
 app.UseCors(); // Use default policy
