@@ -99,6 +99,11 @@ builder.Services.AddSwaggerGen(option =>
 // suppress warning because we just know they are there
 // var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB")!;
+if (baseConnectionString == null)
+{
+    logger.LogCritical("AzureSQLDB connection string is NULL!");
+    throw new InvalidOperationException("Connection string not found!");
+}
 var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
 if (string.IsNullOrEmpty(password))
 {
