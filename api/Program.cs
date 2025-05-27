@@ -186,6 +186,12 @@ builder.Services.AddCors(options =>
 });
 
 // 6. Build the app
+// set port (try to fix azure error)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://*:{port}");
+}
 var app = builder.Build();
 // for auto migrate on Azure
 try
