@@ -98,7 +98,7 @@ builder.Services.AddSwaggerGen(option =>
 // 3. DB Connection
 // suppress warning because we just know they are there
 // var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB")!;
+var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB");
 if (baseConnectionString == null)
 {
     logger.LogCritical("AzureSQLDB connection string is NULL!");
@@ -106,7 +106,7 @@ if (baseConnectionString == null)
 }
 logger.LogInformation("AzureSQLDB connection string loaded from Key Vault");
 
-var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
+var password = builder.Configuration["DBPassword"];    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
 if (string.IsNullOrEmpty(password))
 {
     logger.LogCritical("DBPassword string is NULL!");
@@ -151,7 +151,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey =
             new SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(
-                    builder.Configuration["JWT:SigningKey"]!)) // suppress warning because we just know the key is there
+                    builder.Configuration["JWT:SigningKey"]!)) // suppress warning because the key should be there if we reached this step
     };
 });
 
