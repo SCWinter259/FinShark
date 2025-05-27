@@ -35,8 +35,8 @@ builder.Logging
     .AddFilter("Microsoft", LogLevel.Warning)
     .AddFilter("System", LogLevel.Warning);
 
-var app = builder.Build();
-var logger = app.Services.GetRequiredService<ILoggerFactory>()
+var logger = LoggerFactory
+    .Create(logging => logging.AddConsole())
     .CreateLogger("Program");
 
 // 1. Add configuration (Key Vault)
@@ -186,6 +186,7 @@ builder.Services.AddCors(options =>
 });
 
 // 6. Build the app
+var app = builder.Build();
 // for auto migrate on Azure
 try
 {
