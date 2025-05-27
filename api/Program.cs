@@ -63,6 +63,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+logger.LogInformation("Added Newtonsoft");
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // generates swagger doc at [host]/swagger
@@ -94,6 +96,8 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
+logger.LogInformation("Added Swagger UI");
 
 // 3. DB Connection
 // suppress warning because we just know they are there
