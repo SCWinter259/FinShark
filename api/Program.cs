@@ -104,11 +104,15 @@ if (baseConnectionString == null)
     logger.LogCritical("AzureSQLDB connection string is NULL!");
     throw new InvalidOperationException("Connection string not found!");
 }
+logger.LogInformation("AzureSQLDB connection string loaded from Key Vault");
+
 var password = builder.Configuration["DBPassword"]!;    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
 if (string.IsNullOrEmpty(password))
 {
+    logger.LogCritical("DBPassword string is NULL!");
     throw new Exception("Database password is not configured.");
 }
+logger.LogInformation("DBPassword loaded from Key Vault");
 var fullConnectionString = $"{baseConnectionString};Password={password}";
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
