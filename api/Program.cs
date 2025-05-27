@@ -47,24 +47,18 @@ builder.Configuration.AddAzureKeyVault(
     new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
 // for testing if azure took the key from key vault corretly
 var testSecret = builder.Configuration["JWT:SigningKey"];
-// if (string.IsNullOrEmpty(testSecret))
-// {
-//     logger.LogInformation("JWT:SigningKey is missing or null");
-// }
-// else
-// {
-//     logger.LogInformation("JWT:SigningKey loaded from Key Vault: " + testSecret);
-// }
+if (string.IsNullOrEmpty(testSecret))
+{
+    logger.LogInformation("JWT:SigningKey is missing or null");
+}
+else
+{
+    logger.LogInformation("JWT:SigningKey loaded from Key Vault: " + testSecret);
+}
+
+logger.LogInformation("JWT:SigningKey did not stop the app");
 
 // 2. Add Services
-// NewtonsoftJson is used to serialize objects to Json
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-});
-
-logger.LogInformation("Added Newtonsoft");
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // generates swagger doc at [host]/swagger
@@ -98,6 +92,14 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 logger.LogInformation("Added Swagger UI");
+
+// NewtonsoftJson is used to serialize objects to Json
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
+logger.LogInformation("Added Newtonsoft");
 
 // 3. DB Connection
 // suppress warning because we just know they are there
