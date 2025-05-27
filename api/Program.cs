@@ -47,14 +47,14 @@ builder.Configuration.AddAzureKeyVault(
     new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
 // for testing if azure took the key from key vault corretly
 var testSecret = builder.Configuration["JWT:SigningKey"];
-if (string.IsNullOrEmpty(testSecret))
-{
-    logger.LogInformation("JWT:SigningKey is missing or null");
-}
-else
-{
-    logger.LogInformation("JWT:SigningKey loaded from Key Vault");
-}
+// if (string.IsNullOrEmpty(testSecret))
+// {
+//     logger.LogInformation("JWT:SigningKey is missing or null");
+// }
+// else
+// {
+//     logger.LogInformation("JWT:SigningKey loaded from Key Vault: " + testSecret);
+// }
 
 // 2. Add Services
 // NewtonsoftJson is used to serialize objects to Json
