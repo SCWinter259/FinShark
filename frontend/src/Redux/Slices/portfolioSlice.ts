@@ -19,9 +19,12 @@ export const portfolioSlice = createSlice({
         deletePortfolioValue(state, action: PayloadAction<PortfolioGet>) {
             // suppress warning because it cannot be null if we have a button to click
             state.portfolioValues = state.portfolioValues!.filter(portfolio => portfolio.symbol !== action.payload.symbol);
+        },
+        resetPortfolioValues(state) {
+            state.portfolioValues = initialState.portfolioValues;
         }
     }
 })
 
-export const { setPortfolioValues, deletePortfolioValue } = portfolioSlice.actions;
+export const { setPortfolioValues, deletePortfolioValue, resetPortfolioValues } = portfolioSlice.actions;
 export default portfolioSlice.reducer;  // the store is gonne import this as portfolioReducer

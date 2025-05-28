@@ -4,6 +4,8 @@ import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {loginAPI, registerAPI} from "../src/Services/AuthService";
 import {toast} from "react-toastify";
+import {useDispatch} from "react-redux";
+import {resetPortfolioValues} from "../src/Redux/Slices/portfolioSlice.ts";
 
 type UserContextType = {
     user: UserProfile | null;
@@ -23,6 +25,7 @@ export const UserProvider = ({children}: Props) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         // every time this provider is invoked, we reach into the local storage to
@@ -87,6 +90,7 @@ export const UserProvider = ({children}: Props) => {
         localStorage.removeItem("user");
         setUser(null);
         setToken("");
+        dispatch(resetPortfolioValues());
         navigate("/");
     };
 
