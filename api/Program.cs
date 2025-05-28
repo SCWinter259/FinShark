@@ -56,8 +56,6 @@ else
     logger.LogInformation("JWT:SigningKey loaded from Key Vault: " + testSecret);
 }
 
-logger.LogInformation("JWT:SigningKey did not stop the app");
-
 // 2. Add Services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -186,12 +184,6 @@ builder.Services.AddCors(options =>
 });
 
 // 6. Build the app
-// set port (try to fix azure error)
-var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
-{
-    builder.WebHost.UseUrls($"http://*:{port}");
-}
 var app = builder.Build();
 // for auto migrate on Azure
 try
