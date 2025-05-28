@@ -17,7 +17,7 @@ const NavBar = () => {
                         </Link>
                     </div>
                     <div className="hidden font-bold lg:flex">
-                        <Link to="/portfolio" className="text-black hover:text-darkBlue">
+                        <Link to="/portfolio" state={{refresh: Date.now()}} className="text-black hover:text-darkBlue">
                             My Portfolio
                         </Link>
                     </div>
