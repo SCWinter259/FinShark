@@ -12,13 +12,13 @@ function App() {
 
   return (
     <>
-        <UserProvider>
-            <Provider store={store}>
+        <Provider store={store}>
+            <UserProvider>
                 <NavBar/>
                 <Outlet/>
                 <ToastContainer/>
-            </Provider>
-        </UserProvider>
+            </UserProvider>
+        </Provider>
     </>
   );
 }
