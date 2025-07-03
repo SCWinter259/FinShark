@@ -23,6 +23,10 @@ export const router = createBrowserRouter([
             {path: "search", element: <ProtectedRoute><SearchPage/></ProtectedRoute>},
             {path: "portfolio", element: <ProtectedRoute><PortfolioPage/></ProtectedRoute>},
             {path: "company/:ticker", element: <ProtectedRoute><CompanyPage/></ProtectedRoute>,
+                // comments down here for dev testing only (no protected routes, no logging in)
+            // {path: "search", element: <SearchPage/>},
+            // {path: "portfolio", element: <PortfolioPage/>},
+            // {path: "company/:ticker", element: <CompanyPage/>,
                 children: [
                     {path: "company-profile", element: <CompanyProfile/>},
                     {path: "income-statement", element: <IncomeStatement/>},

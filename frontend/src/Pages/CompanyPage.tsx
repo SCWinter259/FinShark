@@ -31,7 +31,7 @@ const CompanyPage = () => {
             {company ? (
                 <div className="w-full relative flex ct-docs-disable-sidebar-content overflow-x-hidden">
                     <SideBar/>
-                    <div className="flex-col relative md:ml-64 bg-blueGray-100 w-full">
+                    <div className="flex-col relative md:ml-64 bg-blueGray-100 w-[calc(100vw-16rem)]">
                         <Chart ticker={ticker!}/>
                         <CompanyDashboard ticker={ticker!}>
                             <Tile title="Company Name" subtitle={company.companyName}/>
