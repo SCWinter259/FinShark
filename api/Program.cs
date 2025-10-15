@@ -40,12 +40,20 @@ var logger = LoggerFactory
     .CreateLogger("Program");
 
 // 1. Add configuration (Key Vault)
-builder.Configuration.AddUserSecrets<Program>();    // for local development user secrets
-// for using secrets from key vault
-builder.Configuration.AddAzureKeyVault(
-    new Uri("https://finsharkkeyvault.vault.azure.net/"),
-    new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
-// for testing if azure took the key from key vault corretly
+if (builder.Environment.IsDevelopment())
+{
+    // for local development user secrets
+    builder.Configuration.AddUserSecrets<Program>();
+}
+else
+{
+    // for using secrets from key vault
+    builder.Configuration.AddAzureKeyVault(
+        new Uri("https://finsharkkeyvault.vault.azure.net/"),
+        new ManagedIdentityCredential(clientId: "71196bb2-8503-4c0e-a474-db42e924842c"));
+}
+
+// for testing if azure took the key from key vault correctly
 var testSecret = builder.Configuration["JWT:SigningKey"];
 if (string.IsNullOrEmpty(testSecret))
 {
@@ -101,14 +109,22 @@ logger.LogInformation("Added Newtonsoft");
 
 // 3. DB Connection
 // suppress warning because we just know they are there
-// var baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-var baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB");
-if (baseConnectionString == null)
+string? baseConnectionString;
+
+if (builder.Environment.IsDevelopment())
 {
-    logger.LogCritical("AzureSQLDB connection string is NULL!");
-    throw new InvalidOperationException("Connection string not found!");
+    baseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!; 
 }
-logger.LogInformation("AzureSQLDB connection string loaded from Key Vault");
+else
+{
+    baseConnectionString = builder.Configuration.GetConnectionString("AzureSQLDB");
+    if (baseConnectionString == null)
+    {
+        logger.LogCritical("AzureSQLDB connection string is NULL!");
+        throw new InvalidOperationException("Connection string not found!");
+    }
+    logger.LogInformation("AzureSQLDB connection string loaded from Key Vault");
+}
 
 var password = builder.Configuration["DBPassword"];    //  Get from User Secrets (dev) or Azure Key Vault (Prod)
 if (string.IsNullOrEmpty(password))
@@ -186,15 +202,18 @@ builder.Services.AddCors(options =>
 // 6. Build the app
 var app = builder.Build();
 // for auto migrate on Azure
-try
+if (builder.Environment.IsProduction())
 {
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-    db.Database.Migrate();
-}
-catch (Exception ex)
-{
-    logger.LogInformation($"DB Migration failed: {ex.Message}");
+    try
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        logger.LogInformation($"DB Migration failed: {ex.Message}");
+    }
 }
 
 // Configure the HTTP request pipeline.

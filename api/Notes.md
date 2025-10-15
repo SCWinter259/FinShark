@@ -92,7 +92,57 @@ GO
 ## Storing User Secrets
 
 .NET does not have anything equivalent to `.env`. Instead, it uses
-***User Secrets*** for development and ***Azure Key Vault*** for deployment.
+***User Secrets*** for development and ***Azure Key Vault*** for deployment. [Here](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-9.0&tabs=linux) is the guide for User Secrets
 
-- [Here](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-9.0&tabs=linux) is the guide for User Secrets
-- 
+Some basic stuffs includes:
+
+- Initializing user secrets for a new project:
+
+```shell
+dotnet user-secrets init
+```
+
+- Set a secret:
+
+```shell
+dotnet user-secrets set "Movies:ServiceApiKey" "12345" --project "C:\apps\WebApp1\src\WebApp1"
+```
+
+with that code, the `secrets.json` created will look something like:
+
+```json
+{
+  "Movies": {
+    "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=Movie-1;Trusted_Connection=True;MultipleActiveResultSets=true",
+    "ServiceApiKey": "12345"
+  }
+}
+```
+
+this `secrets.json` will be combined with the information in `appsettings.json`. Look at the code in `Program.cs` to understand how it all works. Quite simple actually.
+
+- Removing a secret:
+
+```shell
+dotnet user-secrets remove "Movies:ServiceApiKey"
+```
+
+- List the secrets:
+
+```shell
+dotnet user-secrets list
+```
+
+## Continuing Local Development
+
+Development never stops! Especially in a broad field like stock/finance. There are things to keep in mind
+when the product is already deployed, but you still want to make changes locally (and then deploy again).
+
+First of all, about `appsettings.json` and `appsettings.Development.json`: 
+- In case of Production environment, only `appsettings.json` is loaded. 
+- In case of Development environment, `appsettings.json` will be loaded first, and then `appsettings.Development.json` loaded next. 
+If an information is in both files, the one in Development settings will be applied.
+
+By default, `ASPNETCORE_ENVIRONMENT` is always `"Production"`. In `launchSettigns.json`, we defined `ASPNETCORE_ENVIRONMENT="Development"`, and since `launchSettings.json` is
+only loaded when you start the app locally, the local environment is always in `"Development` mode, while the deployed environment on Azure would always be `"Production"` by default. 
+because of this, not too much will have to be changed when we continue developing on a deployed app.
