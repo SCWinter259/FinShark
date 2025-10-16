@@ -65,7 +65,7 @@ Then make sure you have all the following packages:
 
 ## Test accounts
 
-All test users have password the same as email, or with the first letter of email capitalized.
+All test users have password the same as email, or with the first letter of email capitalized. The username is anything before `"@"` in the email.
 
 testUser1 token:
 

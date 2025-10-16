@@ -8,25 +8,18 @@ namespace api.Data;
 /*
  * The context actually goes into the database and search the tables for you.
  */
-public class ApplicationDBContext : IdentityDbContext<AppUser>
+public class ApplicationDBContext(DbContextOptions dbContextOptions) : IdentityDbContext<AppUser>(dbContextOptions)
 {
-    public ApplicationDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
-    {
-    }
-
-    public DbSet<Stock> Stocks { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Portfolio> Portfolios { get; set; }
+    public DbSet<PortfolioItem> PortfolioItems { get; set; }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // declare foreign keys for Portfolio
-        builder.Entity<Portfolio>(x => x.HasKey(p => new { p.AppUserId, p.StockId }));
-        // a portfolio points to a single app user, an app user can point to many portfolios, portfolio table will use AppUserId for this relationship
-        builder.Entity<Portfolio>().HasOne(u => u.AppUser).WithMany(u => u.Portfolios).HasForeignKey(p => p.AppUserId);
-        builder.Entity<Portfolio>().HasOne(u => u.Stock).WithMany(u => u.Portfolios).HasForeignKey(p => p.StockId);
+        // declare (composite) foreign key for PortfolioItem
+        // each app user has many portfolio items
+        builder.Entity<PortfolioItem>().HasOne(u => u.AppUser).WithMany(u => u.PortfolioItems)
+            .HasForeignKey(p => p.AppUserId);
 
         /*
          * At least 1 user role is required in .NET
