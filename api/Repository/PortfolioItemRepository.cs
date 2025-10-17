@@ -30,8 +30,8 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
     /// Add a PortfolioItem for a user
     /// </summary>
     /// <param name="user">An AppUser object, representing the current user</param>
-    /// <param name="portfolioItem">The added PortfolioItem</param>
-    /// <returns></returns>
+    /// <param name="portfolioItem">A PortfolioItem object</param>
+    /// <returns>The added PortfolioItem</returns>
     public async Task<PortfolioItem?> AddPortfolioItem(AppUser user, PortfolioItem portfolioItem)
     {
         var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
@@ -53,8 +53,8 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
     /// Update the Count and AveragePrice for an existing PortfolioItem
     /// </summary>
     /// <param name="user">An AppUser object, representing the current user</param>
-    /// <param name="portfolioItem">The updated PortfolioItem</param>
-    /// <returns></returns>
+    /// <param name="portfolioItem">A PortfolioItem object</param>
+    /// <returns>The updated PortfolioItem</returns>
     public async Task<PortfolioItem?> UpdatePortfolioItem(AppUser user, PortfolioItem portfolioItem)
     {
         var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
@@ -67,15 +67,38 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
         // we reject the operation if the portfolio item does not exist for the user
         if (existingPortfolioItem == null) return null;
         
+        /*
+         * The intention here is, if anything other than Count and AveragePrice needs to be changed,
+         * like if there is a Name change, we'll just notify the user that something in our db no longer exist,
+         * the user would have to delete it and go find and save a new stock/ETF.
+         */
         existingPortfolioItem.Count = portfolioItem.Count;
         existingPortfolioItem.AveragePrice = portfolioItem.AveragePrice;
         await context.SaveChangesAsync();
         
-        return portfolioItem;
+        return existingPortfolioItem;
     }
 
-    public Task<PortfolioItem?> DeletePortfolioItem(AppUser user, PortfolioItem portfolioItem)
+    /// <summary>
+    /// Delete a PortfolioItem
+    /// </summary>
+    /// <param name="user">An AppUser object, representing the current user</param>
+    /// <param name="portfolioItem">A PortfolioItem object</param>
+    /// <returns>The deleted PortfolioItem</returns>
+    public async Task<PortfolioItem?> DeletePortfolioItem(AppUser user, PortfolioItem portfolioItem)
     {
-        throw new NotImplementedException();
+        var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
+            item.AppUserId == user.Id && 
+            item.Symbol == portfolioItem.Symbol && 
+            item.Exchange == portfolioItem.Exchange && 
+            item.Name == portfolioItem.Name && 
+            item.Type == portfolioItem.Type);
+        
+        // we reject the operation if the portfolio item does not exist for the user
+        if (existingPortfolioItem == null) return null;
+
+        context.PortfolioItems.Remove(existingPortfolioItem);
+        await context.SaveChangesAsync();
+        return existingPortfolioItem;
     }
 }
