@@ -17,6 +17,8 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
         return await context.PortfolioItems.Where(u => u.AppUserId == user.Id).Select(item => new PortfolioItem
         {
             Id = item.Id,
+            AppUser = item.AppUser,
+            AppUserId = item.AppUserId,
             Count =  item.Count,
             Exchange = item.Exchange,
             Symbol = item.Symbol,

@@ -9,20 +9,12 @@ namespace api.Controllers;
 
 [Route("api/account")]
 [ApiController]
-public class AccountController : ControllerBase
+public class AccountController(
+    UserManager<AppUser> userManager,
+    ITokenService tokenService,
+    SignInManager<AppUser> signInManager)
+    : ControllerBase
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly ITokenService _tokenService;
-    private readonly SignInManager<AppUser> _signInManager;
-
-    public AccountController(UserManager<AppUser> userManager, ITokenService tokenService,
-        SignInManager<AppUser> signInManager)
-    {
-        _userManager = userManager;
-        _tokenService = tokenService;
-        _signInManager = signInManager;
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
@@ -31,14 +23,14 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
 
         if (user == null)
         {
             return Unauthorized("Invalid username!");
         }
         
-        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        var result = await signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
         
         if(!result.Succeeded) return Unauthorized("Username not found and/or password is incorrect!");
 
@@ -47,7 +39,7 @@ public class AccountController : ControllerBase
             // suppress warnings because username and email were required at register
             UserName = user.UserName!,
             Email = user.Email!,
-            Token = _tokenService.CreateToken(user)
+            Token = tokenService.CreateToken(user)
         });
     }
 
@@ -70,12 +62,12 @@ public class AccountController : ControllerBase
             };
 
             // suppress Password null alert because we already validated the DTO above
-            var createUser = await _userManager.CreateAsync(appUser, registerDto.Password!);
+            var createUser = await userManager.CreateAsync(appUser, registerDto.Password!);
 
             if (!createUser.Succeeded) return StatusCode(500, createUser.Errors);
 
             // assign a role for the new user
-            var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
+            var roleResult = await userManager.AddToRoleAsync(appUser, "User");
 
             if (roleResult.Succeeded)
             {
@@ -84,7 +76,7 @@ public class AccountController : ControllerBase
                     {
                         UserName = appUser.UserName,
                         Email = appUser.Email,
-                        Token = _tokenService.CreateToken(appUser)
+                        Token = tokenService.CreateToken(appUser)
                     });
             }
 
