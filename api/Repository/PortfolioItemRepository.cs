@@ -31,13 +31,12 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
     /// <summary>
     /// Add a PortfolioItem for a user
     /// </summary>
-    /// <param name="user">An AppUser object, representing the current user</param>
     /// <param name="portfolioItem">A PortfolioItem object</param>
     /// <returns>The added PortfolioItem</returns>
-    public async Task<PortfolioItem?> AddPortfolioItem(AppUser user, PortfolioItem portfolioItem)
+    public async Task<PortfolioItem?> AddPortfolioItem(PortfolioItem portfolioItem)
     {
         var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
-            item.AppUserId == user.Id && 
+            item.AppUserId == portfolioItem.AppUserId && 
             item.Symbol == portfolioItem.Symbol && 
             item.Exchange == portfolioItem.Exchange && 
             item.Name == portfolioItem.Name && 
@@ -54,13 +53,12 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
     /// <summary>
     /// Update the Count and AveragePrice for an existing PortfolioItem
     /// </summary>
-    /// <param name="user">An AppUser object, representing the current user</param>
     /// <param name="portfolioItem">A PortfolioItem object</param>
     /// <returns>The updated PortfolioItem</returns>
-    public async Task<PortfolioItem?> UpdatePortfolioItem(AppUser user, PortfolioItem portfolioItem)
+    public async Task<PortfolioItem?> UpdatePortfolioItem(PortfolioItem portfolioItem)
     {
         var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
-            item.AppUserId == user.Id && 
+            item.AppUserId == portfolioItem.AppUserId && 
             item.Symbol == portfolioItem.Symbol && 
             item.Exchange == portfolioItem.Exchange && 
             item.Name == portfolioItem.Name && 
@@ -84,13 +82,12 @@ public class PortfolioItemRepository(ApplicationDBContext context) : IPortfolioI
     /// <summary>
     /// Delete a PortfolioItem
     /// </summary>
-    /// <param name="user">An AppUser object, representing the current user</param>
     /// <param name="portfolioItem">A PortfolioItem object</param>
     /// <returns>The deleted PortfolioItem</returns>
-    public async Task<PortfolioItem?> DeletePortfolioItem(AppUser user, PortfolioItem portfolioItem)
+    public async Task<PortfolioItem?> DeletePortfolioItem(PortfolioItem portfolioItem)
     {
         var existingPortfolioItem = await context.PortfolioItems.FirstOrDefaultAsync(item => 
-            item.AppUserId == user.Id && 
+            item.AppUserId == portfolioItem.AppUserId && 
             item.Symbol == portfolioItem.Symbol && 
             item.Exchange == portfolioItem.Exchange && 
             item.Name == portfolioItem.Name && 
